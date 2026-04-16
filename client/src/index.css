@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+}
+
+body #root {
+  min-height: 100dvh;
+}
+
+.rbc-events-container {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.rbc-event-content {
+  white-space: normal !important;
+  text-align: center !important;
+}
