@@ -27,8 +27,8 @@ export default function ShiftEditorModal({
       types.map((type) => ({
         value: type.name,
         label: type.name,
-        color: type.bgcolor || type.color,
-        textColor: type.textcolor || "#1E293B",
+        color: type.bgColor || "#E0E7FF",
+        textColor: type.textColor || "#1E293B",
       })),
     [types]
   );

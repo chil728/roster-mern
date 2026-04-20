@@ -40,8 +40,8 @@ const Home = () => {
           .flatMap((c) => c.rosters || [])
           .filter((r) => r !== null)
           .map((r) => {
-            const backgroundColor = r.type?.bgcolor || r.type?.color || "#E0E7FF";
-            const textColor = r.type?.textcolor || "#1E293B";
+            const backgroundColor = r.type?.bgColor || "#E0E7FF";
+            const textColor = r.type?.textColor || "#1E293B";
 
             return {
               id: r._id,

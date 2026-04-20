@@ -20,8 +20,8 @@ const Type = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    bgcolor: "#3B82F6",
-    textcolor: "#FFFFFF",
+    bgColor: "#3B82F6",
+    textColor: "#FFFFFF",
   });
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const Type = () => {
   const resetForm = () => {
     setIsCreating(false);
     setEditingId(null);
-    setFormData({ name: "", description: "", bgcolor: "#3B82F6", textcolor: "#FFFFFF" });
+    setFormData({ name: "", description: "", bgColor: "#3B82F6", textColor: "#FFFFFF" });
   };
 
   const handleEdit = (type) => {
@@ -58,27 +58,27 @@ const Type = () => {
     setFormData({
       name: type.name,
       description: type.description,
-      bgcolor: type.bgcolor || type.color || "#3B82F6",
-      textcolor: type.textcolor || "#FFFFFF",
+      bgColor: type.bgColor || "#3B82F6",
+      textColor: type.textColor || "#FFFFFF",
     });
     setIsCreating(true);
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this type?")) {
-      try {
-        const { data } = await api.delete(`/types/${id}`);
-        if (data.success) {
-          toast.success("Type deleted successfully");
-          getUserTypes();
-        } else {
-          toast.error(data.message);
-        }
-      } catch (error) {
-        toast.error(error.message);
-      }
-    }
-  };
+  // const handleDelete = async (id) => {
+  //   if (window.confirm("Are you sure you want to delete this type?")) {
+  //     try {
+  //       const { data } = await api.delete(`/types/${id}`);
+  //       if (data.success) {
+  //         toast.success("Type deleted successfully");
+  //         getUserTypes();
+  //       } else {
+  //         toast.error(data.message);
+  //       }
+  //     } catch (error) {
+  //       toast.error(error.message);
+  //     }
+  //   }
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,8 +119,8 @@ const Type = () => {
                   setFormData({
                     name: "",
                     description: "",
-                    bgcolor: randomBgColor,
-                    textcolor: getReadableTextColor(randomBgColor),
+                    bgColor: randomBgColor,
+                    textColor: getReadableTextColor(randomBgColor),
                   });
                   setIsCreating(true);
                 }
@@ -155,14 +155,14 @@ const Type = () => {
                     <div className="flex gap-2">
                       <input
                         type="color"
-                        value={formData.bgcolor}
-                        onChange={(e) => setFormData({ ...formData, bgcolor: e.target.value.toUpperCase() })}
+                        value={formData.bgColor}
+                        onChange={(e) => setFormData({ ...formData, bgColor: e.target.value.toUpperCase() })}
                         className="h-9 w-16 cursor-pointer rounded border border-slate-300 dark:border-gray-600 p-1 bg-white dark:bg-gray-700"
                       />
                       <input
                         type="text"
-                        value={formData.bgcolor}
-                        onChange={(e) => setFormData({ ...formData, bgcolor: e.target.value.toUpperCase() })}
+                        value={formData.bgColor}
+                        onChange={(e) => setFormData({ ...formData, bgColor: e.target.value.toUpperCase() })}
                         className="w-full rounded-lg border border-slate-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-base text-black dark:text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
                       />
                     </div>
@@ -172,14 +172,14 @@ const Type = () => {
                     <div className="flex gap-2">
                       <input
                         type="color"
-                        value={formData.textcolor}
-                        onChange={(e) => setFormData({ ...formData, textcolor: e.target.value.toUpperCase() })}
+                        value={formData.textColor}
+                        onChange={(e) => setFormData({ ...formData, textColor: e.target.value.toUpperCase() })}
                         className="h-9 w-16 cursor-pointer rounded border border-slate-300 dark:border-gray-600 p-1 bg-white dark:bg-gray-700"
                       />
                       <input
                         type="text"
-                        value={formData.textcolor}
-                        onChange={(e) => setFormData({ ...formData, textcolor: e.target.value.toUpperCase() })}
+                        value={formData.textColor}
+                        onChange={(e) => setFormData({ ...formData, textColor: e.target.value.toUpperCase() })}
                         className="w-full rounded-lg border border-slate-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-base text-black dark:text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
                       />
                     </div>
@@ -209,8 +209,8 @@ const Type = () => {
                     key={key} 
                     className="flex items-center gap-4 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-gray-700"
                   >
-                    <Badge tone="slate" dotColor={type.bgcolor || type.color}>
-                      {type.bgcolor || type.color}
+                    <Badge tone="slate" dotColor={type.bgColor}>
+                      {type.bgColor}
                     </Badge>
                     <div className="min-w-0 flex-1">
                       <h3 className="font-semibold text-slate-800 dark:text-white">{type.name}</h3>
