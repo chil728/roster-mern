@@ -18,13 +18,43 @@ function normalizeColorValue(value, fallback) {
   return raw.toUpperCase();
 }
 
+function pickFirstDefined(...values) {
+  for (const value of values) {
+    if (value !== undefined && value !== null) {
+      return value;
+    }
+  }
+  return undefined;
+}
+
+function extractTypePayload(body = {}) {
+  return {
+    name: body.name,
+    description: body.description,
+    bgColor: pickFirstDefined(body.bgColor, body.bgcolor, body.bg_color, body.color),
+    textColor: pickFirstDefined(body.textColor, body.textcolor, body.text_color),
+  };
+}
+
 function normalizeTypePayload(typeDoc) {
   const type = typeof typeDoc.toObject === "function" ? typeDoc.toObject() : typeDoc;
 
+  const bgColor = normalizeColorValue(
+    pickFirstDefined(type.bgColor, type.bg_color, type.bgcolor, type.color),
+    "#3B82F6"
+  );
+  const textColor = normalizeColorValue(
+    pickFirstDefined(type.textColor, type.text_color, type.textcolor),
+    "#FFFFFF"
+  );
+
   return {
     ...type,
-    bgColor: normalizeColorValue(type.bgColor || type.color, "#3B82F6"),
-    textColor: normalizeColorValue(type.textColor, "#FFFFFF"),
+    bgColor,
+    textColor,
+    bgcolor: bgColor,
+    textcolor: textColor,
+    color: bgColor,
   };
 }
 
@@ -61,8 +91,8 @@ export async function createType(req, res) {
         .json({ success: false, message: "Authentication required" });
     }
 
-    const { name, description, bgColor, textColor } = req.body;
-    const result = validate({ name, description, bgColor, textColor });
+    const payload = extractTypePayload(req.body);
+    const result = validate(payload);
     if (!result.valid)
       return res
         .status(400)
@@ -81,10 +111,13 @@ export async function createType(req, res) {
 
     const newType = new TypeModel({
       user: userID,
-      ...result.payload,
+      name: result.payload.name,
+      description: result.payload.description,
+      bg_color: result.payload.bgColor,
+      text_color: result.payload.textColor,
     });
     const savedType = await newType.save();
-    return res.status(201).json({ success: true, type: savedType });
+    return res.status(201).json({ success: true, type: normalizeTypePayload(savedType) });
 
   } catch (error) {
     console.error("Error creating type:", error);
@@ -161,9 +194,9 @@ export async function updateType(req, res) {
         .json({ success: false, message: "Authentication required" });
 
     const { id } = req.params;
-    const { name, description, bgColor, textColor } = req.body;
+    const payload = extractTypePayload(req.body);
 
-    const result = validate({ name, description, bgColor, textColor });
+    const result = validate(payload);
     if (!result.valid) {
       return res
         .status(400)
@@ -179,10 +212,10 @@ export async function updateType(req, res) {
     }
     type.name = result.payload.name;
     type.description = result.payload.description;
-    type.bgColor = result.payload.bgColor;
-    type.textcolor = result.payload.textcolor;
+    type.bg_color = result.payload.bgColor;
+    type.text_color = result.payload.textColor;
     const updatedType = await type.save();
-    return res.json({ success: true, type: updatedType });
+    return res.json({ success: true, type: normalizeTypePayload(updatedType) });
   } catch (error) {
     console.error("Error updating type:", error);
     return res
